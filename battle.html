@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+    body {
+        background-color : rgb(16, 6, 70);
+    }
+    .float{
+      float: left;
+    }
+    .pimage{
+      height:279px;
+      width:180px;
+    }
+    .attkbutton2 {
+        width:1px;
+        height:1px;      
+        font-size: 1px;
+        background-color : rgb(16, 6, 70);
+    }
+    .attkbutton {
+        float:left;
+        width:55px;
+        font-size:25px;
+        padding:25px;
+        border-radius: 10px;
+        background-color:silver;
+        user-select: none;        
+    }
+    .attkbutton:hover{
+        cursor: pointer;
+        user-select: none;
+    }
+    .attkbutton:active{ 
+        color: orange;
+        background-color:rgb(202, 10, 10);
+        box-shadow: 0 0 16px 10px rgb(156, 96, 5);
+        user-select: none;
+    }
+</style>
+</head>
+<body onload="Start(); Auto2();">
+    <audio id="myAudio">
+        <source src="CMusic.mp4" type="audio/mp4">
+    </audio>
+    <audio id="myAudio2">
+        <source src="SMusic.mp4" type="audio/mp4">
+    </audio>
+    <audio id="myAudio3">
+        <source src="Shmusic.mp4" type="audio/mp4">
+    </audio>
+    <audio id="myAudio4">
+        <source src="Gmusic.mp4" type="audio/mp4">
+    </audio>
+    <img src="Himage.jpg" class="float">
+    <span class="attkbutton" type="button" id="toggle" onclick="myFunction(); P(); Hattk(12,20); Hattk2(); Lose(); Win();">slash</span>
+    </br></br></br></br></br></br></br></br></br></br></br></br></br></br></br>
+    <p id="Hhp"></p>
+    <img src="Mimage.jpg" class="float pimage">
+    <span class="attkbutton" id="toggles" onclick="myFunction3(); M(); Mattk(12,20); Mattk2(); Lose(); Win();">claw</span>
+    <p id="Mhp"></p>
+    <script>
+    
+    car2=1000;
+    myMusic2 = document.getElementById("myAudio2");
+    myMusic3 = document.getElementById("myAudio3");
+    myMusic4 = document.getElementById("myAudio4");
+    var queryString = decodeURIComponent(window.location.search);
+    queryString = queryString.substring(7);
+    qs=queryString;
+    qs2="?level="+qs;
+    document.getElementById("Hhp").innerHTML = qs;
+    qs.method="get";
+    function myFunction(){
+      document.getElementById("toggle").style.visibility="hidden";
+      setTimeout(myFunction2, 1000);
+    }
+    function myFunction3(){
+      document.getElementById("toggles").style.visibility="hidden";
+      setTimeout(myFunction4, 1000);
+    }
+    function myFunction2(){
+      document.getElementById("toggle").style.visibility="visible";
+    }
+    function myFunction4(){
+      document.getElementById("toggles").style.visibility="visible";
+    }
+    function Start(){
+      myMusic = document.getElementById("myAudio");
+      myMusic.loop=true;
+      myMusic.load(); 
+      myMusic.play();
+    }
+    function P(){
+      myMusic2.play();
+    }
+    function M(){
+      ty();
+    }
+    function tx(){
+      myMusic3 = document.getElementById("myAudio3");
+      myMusic3.play();
+    }
+    function ty(){
+      myMusic4 = document.getElementById("myAudio4");
+      myMusic4.play();
+    }
+    function Set2(){
+      if (qs == 1) {
+        y = 0.9;
+        x = 1;
+      }
+    }
+    function Set1(){
+      if (qs > 1){
+        x = (queryString-1)*0.25+1; 
+        y = x*0.9;
+      }
+    }
+    function getRH(min, max){
+      HH = Math.floor((Math.random() * min) + max);
+      document.getElementById("Hhp").innerHTML = HH;
+    }
+    function getRM(min, max){
+      MH = Math.floor((Math.random() * min) + max);
+      document.getElementById("Mhp").innerHTML = MH;
+    }
+    function Hattk(min,max){
+      HA= Math.floor((Math.random() * min) + max);
+    }
+    function Mattk(min,max){
+      MA= Math.floor((Math.random() * min) + max);
+    }
+    function Hattk2(){
+      MH = MH - HA;
+      document.getElementById("Mhp").innerHTML = MH;
+      setTimeout(Mattk2, 250);
+    }
+    function Mattk2(){
+      HH = HH - MA;
+      document.getElementById("Hhp").innerHTML = HH;
+    }
+    function Win(){
+      if (MH <= 0) {
+        window.location="Win.html"+qs2;
+      }
+    }
+    function Lose(){
+      if (HH <= 0){
+        window.location.href="Lose.html"+qs2;
+      }
+    }
+    Set1();
+    Set2();
+    getRM(50*x,100*y);
+    getRH(50,200);
+    function Auto(){
+      document.getElementById("toggles").click();
+    }
+    function Auto2(){
+      setInterval(function(){ 
+        Auto(); 
+      }, 1250);
+    }
+    </script> 
+</body>
+</html>

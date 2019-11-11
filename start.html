@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+    body {
+        background-color : rgb(16, 6, 70);
+    }
+    .attkbutton {
+        font-size:50px; 
+        user-select: none;       
+    }
+    .attkbutton2 {
+        padding:20px;
+        font-size:80px;      
+    }
+</style>
+</head>
+<body>
+    <form class="attkbutton" action="battle.html" autocomplete="off" method="get">
+      Playing Level(1-1000):<br>
+      <input id="y" class="attkbutton2" type="number" name="level" min="1" max="1000">
+      <br>
+      press enter to start
+    </form> 
+    <script>
+    clock=55;
+    var myMusic;
+    function sound(src) {
+    this.sound = document.createElement("audio");
+    this.sound.src = src;
+    this.sound.setAttribute("preload", "auto");
+    this.sound.setAttribute("controls", "none");
+    this.sound.style.display = "none";
+    document.body.appendChild(this.sound);
+    this.play = function(){
+        this.sound.play();
+    }
+}
+    function Start(){
+      myMusic = new sound("Bmusic.mp3");
+      if (clock<=100){
+        myMusic.play()
+        clock++;
+      }
+    }
+    if (clock <= 100){
+        Start();
+    }
+    </script>
+</body>
+</html>
