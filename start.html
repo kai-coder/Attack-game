@@ -6,22 +6,116 @@
         background-color : rgb(16, 6, 70);
     }
     .attkbutton {
-        font-size:50px; 
+        font-size:25px; 
+        color: grey;
         user-select: none;       
     }
     .attkbutton2 {
         padding:20px;
-        font-size:80px;      
+        font-size:50px;
+        color: grey;      
+    }
+    .attkbutton3 {
+        font-size:25px; 
+        color: rgb(226, 66, 17);
+        user-select: none;       
+    }
+    .attkbutton4 {
+        padding:20px;
+        font-size:50px;
+        color: rgb(226, 66, 17);     
+    }
+    .attkbutton5 {
+        font-size:25px;
+        color:rgb(83, 83, 211);
+        user-select: none;       
+    }
+    .attkbutton6 {
+        padding:20px;
+        font-size:50px;
+        color:rgb(83, 83, 211);    
+    }
+    .attkbutton7 {
+        font-size:25px;
+        color:rgb(255, 255, 0);
+        user-select: none;       
+    }
+    .attkbutton8 {
+        padding:20px;
+        font-size:50px;
+        color:rgb(255, 255, 0);    
+    }
+    .attkbutton9 {
+        font-size:25px;
+        color:purple;
+        user-select: none;       
+    }
+    .attkbutton10 {
+        padding:20px;
+        font-size:50px;
+        color:purple;    
+    }
+    .split {
+        display:inline-block; margin-top:0px; margin-left:100px;
+    }
+    .attkbutton11 {
+        font-size:25px;
+        padding:25px;
+        border-radius: 10px;
+        background-color:grey;
+        user-select: none;   
+        color:black;     
+    }
+    .attkbutton:hover{
+        cursor: pointer;
+        user-select: none;
     }
 </style>
 </head>
 <body>
-    <form class="attkbutton" action="battle.html" autocomplete="off" method="get">
-      Playing Level(1-1000):<br>
-      <input id="y" class="attkbutton2" type="number" name="level" min="1" max="1000">
+    <form class="attkbutton split" action="battle.html" autocomplete="off" method="get">
+      The Shadow Realm<br>
+      Level(1-100):<br>
+      <input id="x" class="attkbutton2" type="number" name="level" min="1" max="100">
+      <span class="split attkbutton11" onclick="window.location.href = 'battle.html';">The Shadow King</span>
       <br>
       press enter to start
     </form> 
+    <form class="attkbutton3 split" action="battle2.html" autocomplete="off" method="get">
+      <br>The Fire Mountain<br>
+      Level(101-200):<br>
+      <input id="y" class="attkbutton4" type="number" name="level" min="101" max="200">
+      <br>
+      press enter to start
+    </form>
+    <form class="attkbutton5 split" action="battle2.html" autocomplete="off" method="get">
+      <br>The Icy Curse<br>
+      Level(201-300):<br>
+      <input id="z" class="attkbutton6" type="number" name="level" min="201" max="300">
+      <br>
+      press enter to start
+    </form>
+    <form class="attkbutton7 split" action="battle2.html" autocomplete="off" method="get">
+      <br>The Lightning Storm<br>
+      Level(301-400):<br>
+      <input id="z" class="attkbutton8" type="number" name="level" min="301" max="400">
+      <br>
+      press enter to start
+    </form>
+    <form class="attkbutton9 split" action="battle2.html" autocomplete="off" method="get">
+      <br>The Gas Chamber<br>
+      Level(401-500):<br>
+      <input id="z" class="attkbutton10" type="number" name="level" min="301" max="400">
+      <br>
+      press enter to start
+    </form>
+    <form class="attkbutton9 split" action="battle2.html" autocomplete="off" method="get">
+      <br>The Water Kingdom<br>
+      Level(401-500):<br>
+      <input id="z" class="attkbutton10" type="number" name="level" min="301" max="400">
+      <br>
+      press enter to start
+    </form>
     <script>
     clock=55;
     var myMusic;

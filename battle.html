@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
+<script src="hi.js"></script>
 <style>
     body {
         background-color : rgb(16, 6, 70);
@@ -24,7 +25,16 @@
         font-size:25px;
         padding:25px;
         border-radius: 10px;
-        background-color:silver;
+        background-color:grey;
+        user-select: none;        
+    }
+    .attkbutton3 {
+        float:left;
+        width:105px;
+        font-size:25px;
+        padding:12px;
+        border-radius: 10px;
+        background-color:rgb(8, 78, 8);
         user-select: none;        
     }
     .attkbutton:hover{
@@ -52,19 +62,24 @@
     <audio id="myAudio4">
         <source src="Gmusic.mp4" type="audio/mp4">
     </audio>
+    <audio id="myAudio5">
+      <source src="PS.mp4" type="audio/mp4">
+  </audio>
     <img src="Himage.jpg" class="float">
     <span class="attkbutton" type="button" id="toggle" onclick="myFunction(); P(); Hattk(12,20); Hattk2(); Lose(); Win();">slash</span>
     </br></br></br></br></br></br></br></br></br></br></br></br></br></br></br>
     <p id="Hhp"></p>
     <img src="Mimage.jpg" class="float pimage">
     <span class="attkbutton" id="toggles" onclick="myFunction3(); M(); Mattk(12,20); Mattk2(); Lose(); Win();">claw</span>
+    <span class="attkbutton3" id="toggles1" onclick=" myFunction5(); PS(); Mattk(12,20); Mattk2(); Lose(); Win();">poisonous spit</span>
     <p id="Mhp"></p>
     <script>
-    
+    tattk=["1", "2"];
     car2=1000;
     myMusic2 = document.getElementById("myAudio2");
     myMusic3 = document.getElementById("myAudio3");
     myMusic4 = document.getElementById("myAudio4");
+    myMusic5 = document.getElementById("myAudio5");
     var queryString = decodeURIComponent(window.location.search);
     queryString = queryString.substring(7);
     qs=queryString;
@@ -75,15 +90,22 @@
       document.getElementById("toggle").style.visibility="hidden";
       setTimeout(myFunction2, 1000);
     }
+    function myFunction2(){
+      document.getElementById("toggle").style.visibility="visible";
+    }
     function myFunction3(){
       document.getElementById("toggles").style.visibility="hidden";
       setTimeout(myFunction4, 1000);
     }
-    function myFunction2(){
-      document.getElementById("toggle").style.visibility="visible";
-    }
     function myFunction4(){
       document.getElementById("toggles").style.visibility="visible";
+    }
+    function myFunction5(){
+      document.getElementById("toggles1").style.visibility="hidden";
+      setTimeout(myFunction6, 3000);
+    }
+    function myFunction6(){
+      document.getElementById("toggles1").style.visibility="visible";
     }
     function Start(){
       myMusic = document.getElementById("myAudio");
@@ -94,15 +116,16 @@
     function P(){
       myMusic2.play();
     }
+    function PS(){
+      myMusic5.play();
+    }
     function M(){
       ty();
     }
     function tx(){
-      myMusic3 = document.getElementById("myAudio3");
       myMusic3.play();
     }
     function ty(){
-      myMusic4 = document.getElementById("myAudio4");
       myMusic4.play();
     }
     function Set2(){
@@ -157,11 +180,23 @@
     function Auto(){
       document.getElementById("toggles").click();
     }
+    function Auto3(){
+      document.getElementById("toggles1").click();
+    }
+    function random(mn, mx) {  
+            return Math.random() * (mx - mn) + mn;  
+        }  
     function Auto2(){
       setInterval(function(){ 
-        Auto(); 
-      }, 1250);
+          Auto(); 
+        }, 1500);
+      if(qs>=250){ 
+        setInterval(function(){ 
+            Auto3(); 
+        }, 3500);
+      }
     }
+    Hide();
     </script> 
 </body>
 </html>
