@@ -59,6 +59,7 @@
         display:inline-block; margin-top:0px; margin-left:100px;
     }
     .attkbutton11 {
+        width:180px;
         font-size:25px;
         padding:25px;
         border-radius: 10px;
@@ -71,14 +72,41 @@
         user-select: none;
     }
     .attkbutton12 {
+        width:180px;
         font-size:25px;
         padding:25px;
         border-radius: 10px;
-        background-color:rgb(226, 66, 17);;
+        background-color:red;
         user-select: none;   
-        color:rgb(255, 123, 0);     
+        color:orange;     
     }
     .attkbutton12:hover{
+        cursor: pointer;
+        user-select: none;
+    }
+    .attkbutton13 {
+        width:180px;
+        font-size:25px;
+        padding:25px;
+        border-radius: 10px;
+        background-color:rgb(83, 83, 211);
+        user-select: none;   
+        color:rgb(2, 2, 146);     
+    }
+    .attkbutton13:hover{
+        cursor: pointer;
+        user-select: none;
+    }
+    .attkbutton14 {
+        width:180px;
+        font-size:25px;
+        padding:25px;
+        border-radius: 10px;
+        background-color:rgb(255, 255, 0);
+        user-select: none;   
+        color:rgb(146, 146, 0);     
+    }
+    .attkbutton14:hover{
         cursor: pointer;
         user-select: none;
     }
@@ -89,15 +117,15 @@
       The Shadow Realm<br>
       Level(1-100):<br>
       <input id="x" class="attkbutton2" type="number" name="level" min="1" max="100">
-      <span class="split attkbutton11" onclick="window.location.href = 'battle.html';">The Shadow King</span>
+      <span class="split attkbutton11" onclick="window.location.href = 'battle.html';"><center>The Dark King</center></span>
       <br>
       press enter to start
-    </form> 
+    </form>
     <form class="attkbutton3 split" action="battle2.html" autocomplete="off" method="get">
       <br>The Fire Mountain<br>
       Level(101-200):<br>
       <input id="y" class="attkbutton4" type="number" name="level" min="101" max="200">
-      <span class="split attkbutton12" onclick="window.location.href = 'battle.html';">The Shadow King</span>
+      <span class="split attkbutton12" onclick="window.location.href = 'battle.html';"><center>The Lava Demon</center></span>
       <br>
       press enter to start
     </form>
@@ -105,6 +133,7 @@
       <br>The Icy Curse<br>
       Level(201-300):<br>
       <input id="z" class="attkbutton6" type="number" name="level" min="201" max="300">
+      <span class="split attkbutton13" onclick="window.location.href = 'battle.html';"><center>The Ice Witch</center></span>
       <br>
       press enter to start
     </form>
@@ -112,13 +141,15 @@
       <br>The Lightning Storm<br>
       Level(301-400):<br>
       <input id="z" class="attkbutton8" type="number" name="level" min="301" max="400">
+      <span class="split attkbutton14" onclick="window.location.href = 'battle.html';"><center>The Bolt Cloud</center></span>
       <br>
       press enter to start
     </form>
     <form class="attkbutton9 split" action="battle2.html" autocomplete="off" method="get">
       <br>The Gas Chamber<br>
       Level(401-500):<br>
-      <input id="z" class="attkbutton10" type="number" name="level" min="301" max="400">
+      <input id="z" class="attkbutton10" type="number" name="level" min="401" max="500">
+      <span class="split attkbutton14" onclick="window.location.href = 'battle.html';"><center>The Bolt Cloud</center></span>
       <br>
       press enter to start
     </form>
