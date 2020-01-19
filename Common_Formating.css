@@ -1,0 +1,9 @@
+.PlacementFormat{
+   margin-left: 200px;  
+}
+.PlacementFormatsplit {
+   display:inline-block; margin-top:0px; margin-left:200px;
+}
+.PlacementFormatShortersplit {
+   display:inline-block; margin-top:0px; margin-left:160px;
+}

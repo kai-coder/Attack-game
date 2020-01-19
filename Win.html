@@ -28,6 +28,8 @@
 </head>
 <body onload="Start()">
     <span>You win </span><span id="x"></span><span id="y"></span><span> of gold</span>
+    <p id="z"></p>
+    <span onclick="window.location.href = 'battle.html'+qs2;"><center>Collect</center></span>
     <script>
     function sound(src) {
     this.sound = document.createElement("audio");
@@ -44,19 +46,21 @@
       myMusic = new sound("Amusic.mp3");
       myMusic.play();
     }
-    var queryString = decodeURIComponent(window.location.search);
-    queryString = queryString.substring(7);
+    queryString2 = decodeURIComponent(window.location.search);
+    queryString = queryString2.substring(7);
+    document.getElementById("z").innerHTML=qs2;
     Mgold=queryString*5;
     Sgold=queryString*1;
     function Gold(min,max){
       MA= Math.floor((Math.random() * min) + max);
       document.getElementById("x").innerHTML=MA;
     }
-    qs=queryString;
-    qs2="?level="+qs;
-    document.getElementById("qs").innerHTML=qs;
-    qs.method="get";
-    Gold(5*queryString,1*queryString);
+    gold=MA+gold;
+    if (queryString>qs2){
+      qs2=queryString;
+    }
+    qs2="?level2="+1+"?levelAmount="+qs+"?gold="+gold;
+    Gold(5*queryString, 1*queryString);
     function S(){
       if (queryString == 1, MA == 1){
         document.getElementById("y").innerHTML=" piece";

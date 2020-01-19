@@ -74,18 +74,24 @@
     <span class="attkbutton3" id="toggles1" onclick=" myFunction5(); PS(); Mattk(12,20); Mattk2(); Lose(); Win();">poisonous spit</span>
     <p id="Mhp"></p>
     <script>
-    RI2 = Math.floor((Math.random() * 9) + 1)];
+    RI2 = Math.floor((Math.random() * 9) + 1);
     car2=1000;
+    myMusic = document.getElementById("myAudio");
     myMusic2 = document.getElementById("myAudio2");
     myMusic3 = document.getElementById("myAudio3");
     myMusic4 = document.getElementById("myAudio4");
     myMusic5 = document.getElementById("myAudio5");
-    var queryString = decodeURIComponent(window.location.search);
-    queryString = queryString.substring(7);
-    qs=queryString;
-    qs2="?level="+qs;
-    document.getElementById("Hhp").innerHTML = qs;
-    qs.method="get";
+    function getUrlVars() {
+      var vars = {};
+      var parts = window.location.href.replace(/[?&]+([^=&]+)=([^&]*)/gi, function(m,key,value) {
+          vars[key] = value;
+      });
+      return vars;
+    }
+    var qs3 = getUrlVars()["level"];
+    var qs = getUrlVars()["levelAmount"];
+    var gold = getUrlVars()["gold"];
+    qs2="?levelAmount="+qs+"?gold="+gold+"?level="+qs3;
     function myFunction(){
       document.getElementById("toggle").style.visibility="hidden";
       setTimeout(myFunction2, 1000);
@@ -128,108 +134,6 @@
     function ty(){
       myMusic4.play();
     }
-    function Set2(){
-      if (qs == 1) {
-        y = 0.9;
-        x = 1;
-      }
-    }
-    function Set1(){
-      if (qs > 1){
-        x = (queryString-1)*0.25+1; 
-        y = x*0.9;
-      }
-    }
-    function getRH(min, max){
-      HH = Math.floor((Math.random() * min) + max);
-      document.getElementById("Hhp").innerHTML = HH;
-    }
-    function getRM(min, max){
-      MH = Math.floor((Math.random() * min) + max);
-      document.getElementById("Mhp").innerHTML = MH;
-    }
-    function Hattk(min,max){
-      HA= Math.floor((Math.random() * min) + max);
-    }
-    function Mattk(min,max){
-      MA= Math.floor((Math.random() * min) + max);
-    }
-    function Hattk2(){
-      MH = MH - HA;
-      document.getElementById("Mhp").innerHTML = MH;
-      setTimeout(Mattk2, 250);
-    }
-    function Mattk2(){
-      HH = HH - MA;
-      document.getElementById("Hhp").innerHTML = HH;
-    }
-    function Win(){
-      if (MH <= 0) {
-        window.location="Win.html"+qs2;
-      }
-    }
-    function Lose(){
-      if (HH <= 0){
-        window.location.href="Lose.html"+qs2;
-      }
-    }
-    function Image(){
-    function RandomImage(){
-      if (RI2 == 1) {
-        window.location="Win.html"+qs2;
-      }
-    }
-    function RandomImage2(){
-      if (RI == 2) {
-        window.location.href="Lose.html"+qs2;
-      }
-    }
-    function RandomImage3(){
-      if (RI == 3) {
-        window.location.href="Lose.html"+qs2;
-      }
-    }
-    function RandomImage4(){
-      if (RI == 4) {
-        window.location.href="Lose.html"+qs2;
-      }
-    }
-    function RandomImage5(){
-      if (RI == 5) {
-        window.location.href="Lose.html"+qs2;
-      }
-    }
-    function RandomImage6(){
-      if (RI == 6) {
-        window.location.href="Lose.html"+qs2;
-      }
-    }
-    function RandomImage6(){
-      if (RI2 == 6) {
-        window.location="Win.html"+qs2;
-      }
-    }
-    function RandomImage7(){
-      if (RI == 7) {
-        window.location.href="Lose.html"+qs2;
-      }
-    }
-    function RandomImage8(){
-      if (RI == 8) {
-        window.location.href="Lose.html"+qs2;
-      }
-    }
-    function RandomImage9(){
-      if (RI == 9) {
-        window.location.href="Lose.html"+qs2;
-      }
-    }
-    function RandomImage10(){
-      if (RI == 10) {
-        window.location.href="Lose.html"+qs2;
-      }
-    }
-    }
     Set1();
     Set2();
     getRM(50*x,100*y);
@@ -249,7 +153,7 @@
         }, 1500);
       if(qs>=250){ 
         setInterval(function(){ 
-            Auto3(); 
+          Auto3(); 
         }, 3500);
       }
     }
