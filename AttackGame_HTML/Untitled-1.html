@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Fire vs Ice</title>
+<link rel="shortcut icon" href="GameTitle.ico" type="image/x-icon">
+<style>
+    html,body {
+        background-color : black;
+        margin:0px;
+        padding: 0px;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+    }
+    body {
+  position: relative;
+}
+</style>
+</head>
+<body>
+    <audio id="myAudio5">
+        <source src="Bulletsound.mp4" type="audio/mp4">
+    </audio>
+    <canvas id="my_canvas"></canvas>
+<script>
+canvas=document.getElementsByTagName("canvas")[0];
+ctx=canvas.getContext('2d');
+var enemy=[];
+var gold=100;
+var round=1;
+var backgroundimages=["IcevsFire.png","IcevsFire2.png","IcevsFire3.png"]
+var FastSpawnWavesSmallEnemies=[[1,5,10,"SmallEnemy"],[1,6,20,"SmallEnemy"]]
+var MediumSpawnWavesSmallEnemies=[[1,3,5,"SmallEnemy"],[1,7,10,"SmallEnemy"]]
+var SlowSpawnWavesSmallEnemies=[[1,1,5,"SmallEnemy"],[1,4,10,"SmallEnemy"]]
+var FastSpawnRatePerSecond=4;
+var MediumSpawnRatePerSecond=2;
+var SlowSpawnRatePerSecond=1;
+health=100;
+var roundwave=1;
+canvas.addEventListener("touchstart", drawcircle);
+canvas.addEventListener("touchmove", drawcircle);
+function drawcircle(e) {
+        if(e.touches) {
+            playerX = e.touches[0].pageX - canvas.offsetLeft - playerWidth / 2;
+            playerY = e.touches[0].pageY - canvas.offsetTop - playerHeight / 2;
+            output.innerHTML = "Touch:  <br />"+ " x: " + playerX + ", y: " + playerY;
+            e.preventDefault();
+        }
+}
+
+class littleenemy{
+    constructor(img,even,odd,id){
+        this.image=new Image();
+        this.image.src=img;
+        this.add=0
+        this.add2=0;
+        this.i=even;
+        this.d=odd;
+        this.id=id
+        this.damage=1;
+        this.c=0;
+    }
+    draw(){
+        this.x=canvas.width/8*7*0.15+this.add;
+        this.y=canvas.height+canvas.height/18/2+this.add2; 
+        if (this.x>=canvas.width/8*7+canvas.width/8*7/32/2 & this.c==0){
+          this.id=0;
+          enemy.splice(this.id,1);
+          if (health-this.damage<0){
+            health=0;
+          }else{
+            health-=this.damage;
+          }
+          this.c+=1;
+        }
+        if (this.y>canvas.height*0.15 & this.x==canvas.width/8*7*0.15){
+          this.angle=0;
+          this.add2-=canvas.height/500;
+        }
+        if (this.d==0){
+          if (this.y<=canvas.height*0.15 & this.x<canvas.width/8*7*0.77){
+            this.angle=0;
+            this.add+=canvas.width/888.8888;
+          }else if (this.y<canvas.height*0.84 & this.x>=canvas.width/8*7*0.77){
+            this.angle=0;
+            this.add2+=canvas.height/500;
+          }else if (this.y>=canvas.height*0.84 & this.x<canvas.width & this.x>canvas.width/8*7*0.77){
+            this.angle=0;
+            this.add+=canvas.width/888.8888;
+          }
+        }
+        if (this.d==1 & this.i==1){
+          if (this.y<=canvas.height*0.15 & this.x<canvas.width/8*7*0.34){
+            this.angle=0
+            this.add+=canvas.width/888.8888;
+          }else if (this.y<canvas.height*0.37 & this.x>=canvas.width/8*7*0.34){
+            this.angle=0;
+            this.add2+=canvas.height/500;
+          }else if (this.y>=canvas.height*0.37 & this.x<canvas.width/8*7*0.77 & this.x>=canvas.width/8*7*0.34){
+            this.angle=0;
+            this.add+=canvas.width/888.8888;
+          }else if (this.y<canvas.height*0.84 & this.x<=canvas.width/8*7*0.8 & this.x>=canvas.width/8*7*0.34){
+            this.angle=0;
+            this.add2+=canvas.height/500;
+          }else if (this.y>=canvas.height*0.84 & this.x<canvas.width & this.x>=canvas.width/8*7*0.34){
+            this.angle=0;
+            this.add+=canvas.width/888.8888;
+          }
+        }
+        if (this.d==1 & this.i==2){
+          if (this.y<=canvas.height*0.15 & this.x<canvas.width/8*7*0.34){
+            this.angle=0;
+            this.add+=canvas.width/888.8888;
+          }else if (this.y<canvas.height*0.61 & this.x>=canvas.width/8*7*0.34){
+            this.angle=0;
+            this.add2+=canvas.height/500;
+          }else if (this.y>=canvas.height*0.61 & this.x<canvas.width/8*7*0.77 & this.x>=canvas.width/8*7*0.34){
+            this.angle=0;
+            this.add+=canvas.width/888.8888;
+          }else if (this.y<canvas.height*0.84 & this.x<=canvas.width/8*7*0.8 & this.x>=canvas.width/8*7*0.34){
+            this.angle=0;
+            this.add2+=canvas.height/500;
+          }else if (this.y>=canvas.height*0.84 & this.x<canvas.width & this.x>=canvas.width/8*7*0.34){
+            this.angle=0;
+            this.add+=canvas.width/888.8888;
+          }
+        }
+        if (this.d==1 & this.i==3){
+          if (this.y<=canvas.height*0.15 & this.x<canvas.width/8*7*0.34){
+            this.angle=0;
+            this.add+=canvas.width/888.8888;
+          }else if (this.y<canvas.height*0.84 & this.x>=canvas.width/8*7*0.34){
+            this.angle=0;
+            this.add2+=canvas.height/500;
+          }else if (this.y>=canvas.height*0.84 & this.x<canvas.width & this.x>=canvas.width/8*7*0.34){
+            this.angle=0;
+            this.add+=canvas.width/888.8888;
+          }
+        }
+        ctx.save();
+        ctx.translate(this.x, this.y);
+        ctx.rotate(this.angle * Math.PI/180);
+        ctx.drawImage(this.image, -(canvas.width/32/2),-(canvas.height/18/2),canvas.width/8*7/32, canvas.height/18);
+        ctx.restore();
+    }
+}
+window.onload=function(){
+    resize();
+    window.addEventListener("resize",resize,false);
+}
+img2=new Image();
+img3=new Image();
+img3.src="TowerBar.png";
+img4=new Image();
+img4.src="Heart.png";
+img5=new Image();
+img5.src="4shooter.png";
+img6=new Image();
+img6.src="Coin.png";
+img7=new Image();
+img7.src="LoseSign.png";
+function drawsetup(){
+     ctx.drawImage(img2, 0, 0, canvas.width/8*7, canvas.height);
+     ctx.drawImage(img3, canvas.width/8*7, 0, canvas.width/8*1, canvas.height);
+     window.requestAnimationFrame(drawsetup);
+}
+function resize(){
+  ctx.canvas.width=window.innerWidth;
+  ctx.canvas.height=window.innerHeight;
+}
+iv=1;
+id=0;
+function SpawnGroups(){
+  round+=1;
+  for (spawnSlow=0; spawnSlow<SlowSpawnWavesSmallEnemies;spawnSlow++){
+    round+=1;
+    if (SlowSpawnWavesSmallEnemies[0]==round){
+      round+=1;
+    if (SlowSpawnWavesSmallEnemies[1]==roundwave){
+      round+=1;
+        if (EnemyAmount<SlowSpawnWavesSmallEnemies[2]){
+          window.requestAnimationFrame(SpawnSlowGroups);
+        }
+      }
+  }
+  }
+  window.requestAnimationFrame(SpawnGroups);
+}
+function SpawnSlowGroups(){
+  setTimeout(function(){
+      node=enemy.length;
+      id+=1;
+      if (id>1){
+        id=0;
+      }
+      if (id==0){
+        iv+=1;
+      }
+      if (iv>3){
+        iv=1;
+      }
+      enemy.push(new littleenemy("Enemy1.png",iv,id,node));
+      
+    }, 1000/SlowSpawnRatePerSecond);
+}
+function SpawnFastGroups(){
+  setTimeout(function(){
+      node=enemy.length;
+      id+=1;
+      if (id>1){
+        id=0;
+      }
+      if (id==0){
+        iv+=1;
+      }
+      if (iv>3){
+        iv=1;
+      }
+      enemy.push(new littleenemy("Enemy1.png",iv,id,node));
+      window.requestAnimationFrame(SpawnFastGroups);
+    }, 1000);
+}
+function SpawnMediumGroups(){
+  setTimeout(function(){
+      node=enemy.length;
+      id+=1;
+      if (id>1){
+        id=0;
+      }
+      if (id==0){
+        iv+=1;
+      }
+      if (iv>3){
+        iv=1;
+      }
+      enemy.push(new littleenemy("Enemy1.png",iv,id,node));
+      window.requestAnimationFrame(SpawnMediumGroups);
+    }, 1000);
+}
+function drawEnemy(){
+    for (i=enemy.length-1;i>-1;i-=1){
+      enemy[i].draw();
+    }
+    ctx.drawImage(img3, canvas.width/8*7, 0, canvas.width/8*1, canvas.height);
+    window.requestAnimationFrame(drawEnemy);
+}
+var fontBase = 1600,               
+    fontSize = 50; 
+
+function getFont() {
+    var ratio = fontSize / fontBase;
+    var size = canvas.width * ratio;
+    return (size|0) + 'px sans-serif';
+}
+var fontBase2 = 1600,               
+    fontSize2 = 100; 
+
+function getFont2() {
+    var ratio = fontSize2 / fontBase2;
+    var size = canvas.width * ratio;
+    return (size|0) + 'px sans-serif';
+}
+var fontBase3 = 1600,               
+    fontSize3 = 30; 
+
+function getFont3() {
+    var ratio = fontSize3 / fontBase3;
+    var size = canvas.width * ratio;
+    return (size|0) + 'px sans-serif';
+}
+var fontBase4 = 1600,               
+    fontSize4 = 60; 
+
+function getFont4() {
+    var ratio = fontSize4 / fontBase4;
+    var size = canvas.width * ratio;
+    return (size|0) + 'px sans-serif';
+}
+width=0
+height=0
+function losecheck(){
+  if (health<=0){
+    ctx.fillStyle = "rgba(0, 0, 0, 0.4)";
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    ctx.drawImage(img7, canvas.width/2-canvas.width/8*3.5/2, canvas.height/2-canvas.height/2/2, canvas.width/8*3.5, canvas.height/2);
+    img2.src="LoseBackground.png";
+      ctx.beginPath();
+      ctx.font = getFont2(); 
+      ctx.fillStyle = "white";
+      ctx.strokeStyle = 'black';
+      ctx.lineWidth = canvas.width/180;
+      ctx.strokeText("Game Over!", canvas.width/2-canvas.width/8*3.5/2.6, canvas.height/2.6);
+      ctx.fillText("Game Over!",canvas.width/2-canvas.width/8*3.5/2.6, canvas.height/2.6);
+      ctx.font = getFont4(); 
+      ctx.strokeText("You froze at round: "+round, canvas.width/2-canvas.width/8*3.5/2.1, canvas.height/2.1);
+      ctx.fillText("You froze at round: "+round,canvas.width/2-canvas.width/8*3.5/2.1, canvas.height/2.1);
+      ctx.fill();
+    }
+  window.requestAnimationFrame(losecheck);
+}
+back=
+function drawbuyboxes(){
+  back+=1
+  if (back==3){
+    back=0
+    img2.src=backgroundimages[back];
+  }
+  ctx.drawImage(img3, canvas.width/8*7, 0, canvas.width/8*1, canvas.height);
+  ctx.drawImage(img4, canvas.width/4.5, canvas.height/18/6, canvas.width/29.090909, canvas.height/18 );
+  ctx.font = getFont();
+  ctx.strokeStyle = 'black';
+  ctx.lineWidth = canvas.width/180;
+  ctx.strokeText(health, canvas.width/3.8, canvas.height/16);
+  ctx.fillStyle = "white";
+  ctx.fillText(health, canvas.width/3.8, canvas.height/16);
+  ctx.drawImage(img6, canvas.width/200, canvas.height/18/6,  canvas.width/26.6666666, canvas.height/15);
+  ctx.font = getFont(); 
+  ctx.fillStyle = "white";
+  ctx.strokeStyle = 'black';
+  ctx.lineWidth = canvas.width/180;
+  ctx.strokeText("$"+gold, canvas.width-canvas.width/1.05, canvas.height/16);
+  ctx.fillText("$"+gold, canvas.width-canvas.width/1.05, canvas.height/16);
+  if (gold>=100){
+    ctx.beginPath();
+    ctx.fillStyle = "rgba(34,255,0,0.5)";
+    ctx.rect(canvas.width/1.137, canvas.height/102.04, canvas.width/17.7777, canvas.height/6.5);
+    ctx.fill();
+  }else{
+    ctx.beginPath();
+    ctx.fillStyle = "rgba(255,0,0,0.5)";
+    ctx.rect(canvas.width/1.137, canvas.height/102.04, canvas.width/17.7777, canvas.height/6.5);
+    ctx.fill();
+  }
+  ctx.font = getFont3(); 
+  ctx.fillStyle = "white"
+  ctx.strokeStyle = 'black';
+  ctx.lineWidth = canvas.width/200;
+  ctx.strokeText("$100", canvas.width-canvas.width/9, canvas.height/7);
+  ctx.fillText("$100", canvas.width-canvas.width/9, canvas.height/7);
+  ctx.drawImage(img5, canvas.width/1.13, canvas.height/50, canvas.width/22.22222, canvas.height/12.5);
+  window.requestAnimationFrame(drawbuyboxes);
+}
+window.requestAnimationFrame(SpawnGroups);
+window.requestAnimationFrame(SpawnSlowGroups);
+window.requestAnimationFrame(drawsetup);
+window.requestAnimationFrame(drawEnemy);
+window.requestAnimationFrame(losecheck);
+</script>
+</body>
+</html>

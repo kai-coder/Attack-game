@@ -1,0 +1,801 @@
+<!DOCTYPE html>
+<html>
+<head>
+<script src="drawbullets.js" type="text/javascript"></script> 
+<script src="SpikeyEnemy.js" type="text/javascript"></script> 
+<script src="UpdateAllEnemies.js" type="text/javascript"></script> 
+<title>Fire vs Ice</title>
+<link rel="shortcut icon" href="GameTitle.ico" type="image/x-icon">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+    html,body {
+        background-color : black;
+        margin:0%;
+        padding: 0%;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+    }
+    canvas{
+      position: absolute;
+    }
+</style>
+</head>
+<body>
+    <canvas id="Backgroundlayer"></canvas>
+    <canvas id="Bulletlayer"></canvas>
+    <canvas id="Enemylayer"></canvas>
+    <canvas id="clicklayer"></canvas>
+    <canvas id="Toplayer"></canvas>
+<script>
+//clickcanvas setup  
+i=0
+clickcanvas=document.getElementById("clicklayer");
+enemycanvas=document.getElementById("Enemylayer");
+backgroundcanvas=document.getElementById("Backgroundlayer");
+bulletcanvas=document.getElementById("Bulletlayer");
+steamcanvas=document.getElementById("Toplayer");
+clickctx=clickcanvas.getContext('2d');
+enemyctx=enemycanvas.getContext('2d');
+backgroundctx=backgroundcanvas.getContext('2d');
+steamctx=steamcanvas.getContext('2d');
+bulletctx=bulletcanvas.getContext('2d');
+clickcanvas.width=window.innerWidth;
+clickcanvas.height=window.innerHeight;
+enemycanvas.width=window.innerWidth;
+enemycanvas.height=window.innerHeight;
+backgroundcanvas.width=window.innerWidth;
+backgroundcanvas.height=window.innerHeight;
+steamcanvas.width=window.innerWidth;
+steamcanvas.height=window.innerHeight;
+bulletcanvas.width=window.innerWidth;
+bulletcanvas.height=window.innerHeight;
+steamcanvas.addEventListener("touchstart", touchHandler);
+steamcanvas.addEventListener("touchmove", touchHandler3);
+steamcanvas.addEventListener("touchend", touchHandler2);
+//gamesetup
+var showround=1;
+var round=0;
+var roundround=1;
+var playerX=0;
+var playerY=0;
+var GameDone=true;
+fourshooterimgonmouse=false;
+abletopush=true;
+red=false
+//Enemy Arrays
+AllEnemies=[];
+speedmultiplier=0;
+FastPacedRounds=[[1,1,10000,"SpikeyEnemy"]];
+MediumPacedRounds=[];
+SlowPacedRounds=[];
+Alltowers=[];
+Allbullets=[];
+AllSteam=[];
+ReleaseRateFastPacedRounds=4*speedmultiplier;
+ReleaseRateMediumPacedRounds=2*speedmultiplier;
+ReleaseRateSlowPacedRounds=1*speedmultiplier;
+health=100;
+gold=300;
+LastAmountoftouches=0;
+newtouches=0;
+UpgradeBar=false;
+UpgradeBarSlide=0;
+speed0=false
+
+//classes
+class steam{
+  constructor(starterx,startery) {
+    this.image=new Image();
+    this.image.src="Steam.png";
+    this._x=starterx;
+    this._y=startery;
+    this.start=0;
+    this.angle=0;
+    this.width_height=clickcanvas.height/8;
+    this.imageloaded=false;
+    this.nosteam=false
+  }
+  draw(speedmultiplier2){
+  this.start+=0.1*speedmultiplier2;
+  this.image.onload=function(){
+      this.imageloaded=true;
+    }
+  if (this.start<=0.3){
+    this.width_height2=this.width_height*0.3;
+  }
+  if (this.start>0.3 & this.start<=0.6){
+    this.width_height2=this.width_height*0.6;
+  }
+  if (this.start>0.6 & this.start<=0.9){
+    this.width_height2=this.width_height*0.9;
+  }
+  if (this.start<=1.2){
+    if (this.imageloaded=true){
+    steamctx.save();
+    steamctx.translate(this._x, this._y);
+    steamctx.rotate(this.angle * Math.PI/180);
+    steamctx.drawImage(this.image, -(this.width_height2/2),-(this.width_height2/2),this.width_height2, this.width_height2);
+    steamctx.restore();
+    }
+  }else{
+    this.nosteam=true;
+  }
+  }
+  get steam() {
+    return this.nosteam;
+  }
+  set steam(a) {
+    this.nosteam = a;
+  }
+}
+function drawbuybox(price,image,x,y,price2){
+  this.image=new Image();
+  this.image.src=image;
+  if (gold<price){
+    clickctx.beginPath();
+    clickctx.fillStyle = "rgba(255,0,0,0.5)";
+    clickctx.rect(x, y, clickcanvas.width/17.7777, clickcanvas.height/6.5);
+    clickctx.fill();
+  }else if (gold>=price){
+    clickctx.beginPath();
+    clickctx.fillStyle = "rgba(34,255,0,0.5)";
+    clickctx.rect(x, y, clickcanvas.width/17.7777, clickcanvas.height/6.5);
+    clickctx.fill();
+  }
+  clickctx.font = getFont(30,1600); 
+  clickctx.fillStyle = "white";
+  clickctx.strokeStyle = 'black';
+  clickctx.lineWidth = clickcanvas.width/180;
+  if (price<100){
+    clickctx.strokeText("$"+price2, x+clickcanvas.width/60, y+clickcanvas.height/7);
+    clickctx.fillText("$"+price2, x+clickcanvas.width/60, y+clickcanvas.height/7);
+  }else if(price>=100 & price<1000){
+    clickctx.strokeText("$"+price2, x+clickcanvas.width/140, y+clickcanvas.height/7);
+    clickctx.fillText("$"+price2, x+clickcanvas.width/140, y+clickcanvas.height/7);
+  }else if(price>=1000 & price<10000){
+    clickctx.strokeText("$"+price2, x+clickcanvas.width/100, y+clickcanvas.height/7);
+    clickctx.fillText("$"+price2, x+clickcanvas.width/100, y+clickcanvas.height/7);
+  }
+  clickctx.drawImage(this.image,x+(clickcanvas.width/17.7777-clickcanvas.height/11)/2,y+clickcanvas.height/90,clickcanvas.height/11,clickcanvas.height/11);
+}
+Allids=[];
+readyfirstrow=[1];
+readysecondrow=[1];
+readythirdrow=[1];
+readyfourthrow=[1];
+class SpikeyEnemyGohst{
+  constructor(image,starterx,startery,id,id2) {
+    this.id=id;
+    this.image=image;
+    this.damage=5;
+    this.speed=clickcanvas.width/1000;
+    this._x=starterx;
+    this._y=startery;
+    this.star=starterx;
+    this.start=startery;
+    this.width_height=clickcanvas.width/35;
+    this._draw=true;
+    this.id2=id2
+  }
+  draw(speedmultiplier2){
+    if (this.id==0){
+      this.speedmultiplier2=speedmultiplier2;
+      this._x-=this.speed*this.speedmultiplier2;
+    }
+    if (this.id==1){
+      this.speedmultiplier2=speedmultiplier2;
+      this._x+=this.speed*this.speedmultiplier2;
+    }
+    if (this.id==2){
+      this.speedmultiplier2=speedmultiplier2;
+      this._y+=this.speed*this.speedmultiplier2;
+    }
+    if (this.id==3){
+      this.speedmultiplier2=speedmultiplier2;
+      this._y-=this.speed*this.speedmultiplier2;
+    }
+    if (this._x>=this.width_height/4 & this.id==1){
+      readysecondrow.push("1");
+      this._x=this.star;
+    }else {
+      this._draw=true
+    }
+    if (this._x<=clickcanvas.width/8*7-this.width_height/4 & this.id==0){
+      readyfirstrow.push("1");
+      this._x=this.star;
+    }else {
+      this._draw=true
+    }
+    if (this._y>=this.width_height/4 & this.id==2){
+      readythirdrow.push("1");
+      this._y=this.start;
+    }else {
+      this._draw=true
+    }
+    
+    if (this._y<=clickcanvas.height-this.width_height/4 & this.id==3){
+      readyfourthrow.push("1");
+      this._y=this.start;
+    }else {
+      this._draw=true
+    }
+  }
+  get x() {
+    return this._x;
+  }
+  set x(a) {
+    this._x = a;
+  }
+  get y() {
+    return this._y;
+  }
+  set y(d) {
+    this._y = d;
+  }
+  get draw2() {
+    return this._draw;
+  }
+  set draw2(c) {
+    this._draw = c;
+  }
+  get id3() {
+    return this.id2;
+  }
+  set id3(c) {
+    this.id2 = c;
+  }
+}
+i=0;
+class fourshooter{
+  constructor(image,x,y) {
+    this.image=new Image();
+    this.image.src=image;
+    this._x=x;
+    this._y=y;
+    this._width_height=clickcanvas.height/10;
+    this._angle=0;
+    this._imagearrayplace=0;
+    this.imagearrayplaceadd=0;
+    this.imagearray=["4shooter.png","4shooter2.png","4shooter3.png","4shooter4.png","4shooter5.png","4shooter6.png"]
+    this.imageloaded=false;
+    this._reload=false;
+  }
+  draw(speedmultiplier2){
+    this._angle+=1*speedmultiplier2;
+    this.imagearrayplaceadd+=0.1*speedmultiplier2;
+    if (this.imagearrayplaceadd>=1.2){
+      this._imagearrayplace+=1;
+      this.imagearrayplaceadd=0;
+    }
+    if (this._imagearrayplace==6){
+      this._imagearrayplace=0;
+      this._reload=true;
+    }
+    clickctx.save();
+    clickctx.translate(this._x, this._y);
+    clickctx.rotate(this._angle * Math.PI/180);
+    this.image.onload=function(){
+      this.imageloaded=true;
+    }
+    if (this.imageloaded=true){
+      clickctx.drawImage(this.image, -(this._width_height/2),-(this._width_height/2),this._width_height, this._width_height);
+    }
+    this.image.src=this.imagearray[this._imagearrayplace];
+    clickctx.restore();
+  }
+  get x() {
+    return this._x;
+  }
+  set x(a) {
+    this._x = a;
+  }
+  get width_height() {
+    return this._width_height;
+  }
+  set width_height(b) {
+    this._width_height = b;
+  }
+  get reload() {
+    return this._reload;
+  }
+  set reload(d) {
+    this._reload = d;
+  }
+  get imagearrayplace() {
+    return this._imagearrayplace;
+  }
+  set imagearrayplace(c) {
+    this._imagearrayplace = c;
+  }
+  get y() {
+    return this._y;
+  }
+  set y(d) {
+    this._y = d;
+  }
+  get angle(){
+    return this._angle;
+  }
+  set angle(e){
+    this._angle=e;
+  }
+  
+}
+EnemyGetReady=[]
+class bullet{
+  constructor(image,x,y,loxationtox,locationtoy,angle,cx,cy,id,penetration,penetrated) {
+    this.image=new Image();
+    this.image.src=image;
+    this._x=x;
+    this._y=y;
+    this._starterx=x;
+    this._startery=y;
+    this.width=clickcanvas.height/35;
+    this.height=clickcanvas.height/25;
+    this.angle=angle;
+    this.radians = (Math.PI / 180) * angle;
+    this.cos = Math.cos(this.radians),
+    this.sin = Math.sin(this.radians),
+    this._nx = (this.cos * (this._x - cx)) - (this.sin * (this._y - cy)) + cx;
+    this._ny = (this.cos * (this._y - cy)) + (this.sin * (this._x - cx)) + cy;
+    this.starternx=(this.cos * (this._x - cx)) - (this.sin * (this._y - cy)) + cx;
+    this.starterny=(this.cos * (this._y - cy)) + (this.sin * (this._x - cx)) + cy;
+    this.imageloaded=false;
+    this.mouseX=loxationtox;
+    this.mouseY=locationtoy;
+    this.bulletSpeed=clickcanvas.height/450;
+    this.cx=cx;
+    this.cy=cy;
+    this.penetration=2;
+    this.penetrated=0;
+    this.distancefromplacex = this._nx-(this._nx)+(this._nx-cx);
+    this.distancefromplacey = this._ny-(this._ny)+(this._ny-cy);
+    this.magnitude = Math.sqrt(this.distancefromplacex * this.distancefromplacex + this.distancefromplacey * this.distancefromplacey);
+    this.velocityScale = this.bulletSpeed / this.magnitude;
+    this.xvelocity = this.distancefromplacex * this.velocityScale;
+    this.yvelocity = this.distancefromplacey * this.velocityScale;
+    this._true=false
+  }
+  draw(speedmultiplier2){
+    if (this.penetrated==this.penetration){
+      this._true=true;
+    }
+    this.a = this._nx - this.cx;
+    this.b = this._ny - this.cy;
+    this.c = Math.sqrt(this.b*this.b + this.a*this.a);
+    if (this.c>=clickcanvas.height){
+      this._true=true;
+    }
+    this._nx+=this.xvelocity*speedmultiplier2;
+    this._ny+=this.yvelocity*speedmultiplier2;
+    bulletctx.save();
+    bulletctx.translate(this._nx, this._ny);
+    bulletctx.rotate((this.angle+270) * Math.PI/180);
+    this.image.onload=function(){
+      this.imageloaded=true;
+    }
+    if (this.imageloaded=true){
+      bulletctx.drawImage(this.image, -(this.width/2),-(this.height/2),this.width, this.height);
+    }
+    bulletctx.restore();
+  }
+  get true() {
+    return this._true;
+  }
+  set true(a) {
+    this._true = a;
+  }
+  get x() {
+    return this._nx;
+  }
+  set x(a) {
+    this._nx = a;
+  }
+  get y() {
+    return this._ny;
+  }
+  set y(d) {
+    this._ny = d;
+  }
+  get punch() {
+    return this.penetrated;
+  }
+  set punch(d) {
+    this.penetrated = d;
+  }
+}
+//images
+var BackGroundImage=new Image();
+BackGroundImage.src="BackgroundPiece.png";
+BackGroundImageWidth=clickcanvas.width/8*7;
+BackGroundImageHeight=clickcanvas.height;
+var BackGroundBarImage=new Image();
+BackGroundBarImage.src="TowerBar.png";
+BackGroundBarImageWidth=clickcanvas.width/8*1;
+BackGroundBarImageHeight=clickcanvas.height;
+var SpikeyEnemyImage=new Image();
+SpikeyEnemyImage.src="Enemy1.png";
+var RedEnemyImage=new Image();
+RedEnemyImage.src="Enemy4.png";
+var YellowEnemyImage=new Image();
+YellowEnemyImage.src="Enemy5.png";
+var GreenEnemyImage=new Image();
+GreenEnemyImage.src="Enemy3.png";
+var BlueEnemyImage=new Image();
+BlueEnemyImage.src="Enemy2.png";
+var PlayButton=new Image();
+PlayButton.src="PlayButton.png";
+PlayButtonImageHeight=clickcanvas.height/6.75;
+var HealthImage=new Image();
+HealthImage.src="Heart.png";
+HealthImageWidth=clickcanvas.width/24.615;
+HealthImageHeight=clickcanvas.height/14;
+var CoinImage=new Image();
+CoinImage.src="Coin.png";
+CoinImageWidthHeight=clickcanvas.width/24.615;
+var fourshooterimg=new Image();
+fourshooterimg.src="4shooter.png";
+var fourshooterplayerimg=new Image();
+fourshooterimg.src="4shooter.png";
+var fourshooterbulletimg=new Image();
+fourshooterbulletimg.src="4shooterbullet.png";
+var UpgradeBarimg1=new Image();
+UpgradeBarimg1.src="UpgradeBar.png";
+var fourshooterimg2=new Image();
+fourshooterimg2.src="4shooter2.png";
+var fourshooterimg3=new Image();
+fourshooterimg3.src="4shooter3.png";
+var fourshooterimg4=new Image();
+fourshooterimg4.src="4shooter4.png";
+var fourshooterimg5=new Image();
+fourshooterimg5.src="4shooter5.png";
+var fourshooterimg6=new Image();
+fourshooterimg6.src="4shooter6.png";
+var PlayButton2=new Image();
+PlayButton2.src="PlayButton2.png";
+var PlayButton3=new Image();
+PlayButton3.src="PlayButton3.png";
+var GoButton=new Image();
+GoButton.src="GoButton.png";
+allimgs=0;
+Allimgs=[BackGroundImage,BackGroundBarImage,SpikeyEnemyImage,PlayButton,HealthImage,CoinImage,fourshooterimg,fourshooterimg2,fourshooterimg3,fourshooterimg4,fourshooterimg5,fourshooterimg6,UpgradeBarimg1,PlayButton2,PlayButton3,RedEnemyImage,YellowEnemyImage,GreenEnemyImage,BlueEnemyImage,GoButton]
+for (Allimgs2=0; Allimgs2<Allimgs.length;Allimgs2++){
+  Allimgs[Allimgs2].onload= function(){
+    allimgs+=1
+  };
+}
+//mobile pushing buttons
+function touchHandler(e) {
+  function touchHandler3(e) {
+    if(e.touches) {
+      playerX = e.touches[0].pageX - clickcanvas.offsetLeft
+      playerY = e.touches[0].pageY - clickcanvas.offsetTop
+      e.preventDefault();
+    }
+}
+    if(e.touches) {
+      newtouches+=1;
+      playerX = e.touches[0].pageX - clickcanvas.offsetLeft
+      playerY = e.touches[0].pageY - clickcanvas.offsetTop
+      if (playerX<=clickcanvas.width & playerX>=BackGroundImageWidth & playerY<=clickcanvas.height+PlayButtonImageHeight & playerY>=clickcanvas.height-PlayButtonImageHeight){
+    if (GameDone==true & abletopush==true & LastAmountoftouches<newtouches){
+      speedmultiplier=1;
+      round+=1;
+      GameDone=false;
+      abletopush=false;
+    }else if (speedmultiplier==1 & GameDone==false & abletopush==true & LastAmountoftouches<newtouches){
+      speedmultiplier=2;
+      ReleaseRateFastPacedRounds=4*speedmultiplier;
+      ReleaseRateMediumPacedRounds=2*speedmultiplier;
+      ReleaseRateSlowPacedRounds=1*speedmultiplier;
+      abletopush=false;
+    }else if (speedmultiplier==2 & abletopush==true & LastAmountoftouches<newtouches){
+      speedmultiplier=3;
+      ReleaseRateFastPacedRounds=4*speedmultiplier;
+      ReleaseRateMediumPacedRounds=2*speedmultiplier;
+      ReleaseRateSlowPacedRounds=1*speedmultiplier;
+      abletopush=false;
+    }else if (speedmultiplier==3 & abletopush==true & LastAmountoftouches<newtouches){
+      speedmultiplier=1;
+      ReleaseRateFastPacedRounds=4*speedmultiplier;
+      ReleaseRateMediumPacedRounds=2*speedmultiplier;
+      ReleaseRateSlowPacedRounds=1*speedmultiplier;
+      abletopush=false;
+      e.preventDefault();
+    }
+  }else if (playerX<=clickcanvas.width/1.137+clickcanvas.width/17.7777 & playerX>=clickcanvas.width/1.137 & playerY<=clickcanvas.height/40+clickcanvas.height/6.5 & playerY>=clickcanvas.height/40 & gold>=100 & abletopush==true & LastAmountoftouches<newtouches){
+    fourshooterimgonmouse=true;
+    abletopush=false;
+    e.preventDefault();
+  }
+}
+}
+function touchHandler3(e) {
+    if(e.touches) {
+      playerX = e.touches[0].pageX - clickcanvas.offsetLeft
+      playerY = e.touches[0].pageY - clickcanvas.offsetTop
+      e.preventDefault();
+    }
+}
+function touchHandler2(e) {
+    if(e.touches) {
+      LastAmountoftouches+=1;
+      abletopush=true;
+      e.preventDefault();
+      if(fourshooterimgonmouse==true & playerX>=BackGroundImageWidth){
+        fourshooterimgonmouse=false
+      }else if(fourshooterimgonmouse==true & (DeltaX * DeltaX + DeltaY * DeltaY) < (CircleRadius * CircleRadius)){
+        fourshooterimgonmouse=true
+      }else if(fourshooterimgonmouse==true & (DeltaX4 * DeltaX4 + DeltaY4 * DeltaY4) < (CircleRadius * CircleRadius)){
+        fourshooterimgonmouse=true
+      }else if(fourshooterimgonmouse==true & (DeltaX3 * DeltaX3 + DeltaY3 * DeltaY3) < (CircleRadius * CircleRadius)){
+        fourshooterimgonmouse=true
+      }else if(fourshooterimgonmouse==true & (DeltaX2 * DeltaX2 + DeltaY2 * DeltaY2) < (CircleRadius * CircleRadius)){
+        fourshooterimgonmouse=true
+      }else if (fourshooterimgonmouse==true & playerX<=BackGroundImageWidth){
+        Alltowers.push(new fourshooter("4shooter.png",playerX,playerY));
+        fourshooterimgonmouse=false;
+        gold-=100;
+}
+    }
+}
+//font control
+function getFont(fontSize,Screenwidth){
+    var ratio = fontSize / Screenwidth;
+    var size = clickcanvas.width * ratio;
+    return (size|0) + 'px sans-serif';
+}
+
+//Enemy Production
+FastEnemyAmount=-1;
+MediumEnemyAmount=0;
+SlowEnemyAmount=0;
+function MakeFastPacedEnemies(){
+  id2=0
+  for(FastPace=0;FastPace<FastPacedRounds.length;FastPace++){
+    if (FastPacedRounds[FastPace][0]==round){
+      if (FastPacedRounds[FastPace][1]==roundround){
+        if (FastEnemyAmount<FastPacedRounds[FastPace][2]){
+          if(FastEnemyAmount>=0){
+            if (readyfirstrow.length>=1 & id2==0){
+              FastEnemyAmount+=1;
+              AllEnemies.push(new SpikeyEnemy(SpikeyEnemyImage, BackGroundImageWidth+clickcanvas.width/35,clickcanvas.height*0.35,id2,"SpikeEnemy")) 
+              readyfirstrow.splice(0,1)
+              id2+=1;
+            }
+          if (readysecondrow.length>=1 & id2==1){
+              FastEnemyAmount+=1;
+              AllEnemies.push(new SpikeyEnemy(SpikeyEnemyImage, -clickcanvas.width/35,clickcanvas.height*0.65,id2,"SpikeEnemy"))
+              readysecondrow.splice(0,1)
+              id2+=1;
+          }   
+          if (readythirdrow.length>=1 & id2==2){
+              FastEnemyAmount+=1;
+              AllEnemies.push(new SpikeyEnemy(SpikeyEnemyImage, BackGroundImageWidth*0.65,-clickcanvas.width/35,id2,"SpikeEnemy"))
+              readythirdrow.splice(0,1)
+              id2+=1;
+          }
+          if (readyfourthrow.length>=1 & id2==3){
+              FastEnemyAmount+=1;
+              AllEnemies.push(new SpikeyEnemy(SpikeyEnemyImage, BackGroundImageWidth*0.35,clickcanvas.height+clickcanvas.width/35,id2,"SpikeEnemy"))
+              readyfourthrow.splice(0,1)
+              id2=0;
+          }
+          }else{
+            FastEnemyAmount+=1;
+            EnemyGetReady.push(new SpikeyEnemyGohst(SpikeyEnemyImage, BackGroundImageWidth+clickcanvas.width/35,clickcanvas.height*0.35,0)) 
+            EnemyGetReady.push(new SpikeyEnemyGohst(SpikeyEnemyImage, -clickcanvas.width/35,clickcanvas.height*0.65,1))
+            EnemyGetReady.push(new SpikeyEnemyGohst(SpikeyEnemyImage, BackGroundImageWidth*0.65,-clickcanvas.width/35,2))
+            EnemyGetReady.push(new SpikeyEnemyGohst(SpikeyEnemyImage, BackGroundImageWidth*0.35,clickcanvas.height+clickcanvas.width/35,3))
+          }
+        }else{
+            roundround+=1;
+        }
+      }
+    }
+  }
+  window.requestAnimationFrame(MakeFastPacedEnemies);
+}
+function MakeMediumPacedEnemies(){
+  setTimeout(function(){
+  for(MediumPace=0;MediumPace<MediumPacedRounds.length;MediumPace++){
+    if (MediumPacedRounds[MediumPace][0]==round){
+      if (MediumPacedRounds[MediumPace][1]==roundround){
+        if (MediumEnemyAmount<MediumPacedRounds[MediumPace][2]){
+            MediumEnemyAmount+=1;
+            AllEnemies.push(new SpikeyEnemy(SpikeyEnemyImage, BackGroundImageWidth+clickcanvas.width/35,clickcanvas.height*0.35))
+        }else{
+            roundround+=1;
+        }
+      }
+    }
+  }
+  window.requestAnimationFrame(MakeMediumPacedEnemies);
+}, 1000/ReleaseRateMediumPacedRounds);
+}
+function MakeSlowPacedEnemies(){
+  setTimeout(function(){
+  for(SlowPace=0;SlowPace<SlowPacedRounds.length;SlowPace++){
+    if (SlowPacedRounds[SlowPace][0]==round){
+      if (SlowPacedRounds[SlowPace][1]==roundround){
+        if (SlowEnemyAmount<SlowPacedRounds[SlowPace][2]){
+            SlowEnemyAmount+=1;
+            AllEnemies.push(new SpikeyEnemy(SpikeyEnemyImage, BackGroundImageWidth+clickcanvas.width/35,clickcanvas.height*0.35))
+        }else{
+            roundround+=1;
+        }
+      }
+    }
+  }
+  window.requestAnimationFrame(MakeSlowPacedEnemies);
+}, 1000/ReleaseRateSlowPacedRounds);
+}
+CircleRadius=clickcanvas.height/20;
+DeltaX=0
+DeltaY=0
+  DeltaX = playerX-Math.max(BackGroundImageWidth*0.35-(BackGroundImageWidth*0.025), Math.min(playerX, BackGroundImageWidth*0.35-(BackGroundImageWidth*0.025) + BackGroundImageWidth*0.05));
+  DeltaY = playerY-Math.max(0, Math.min(playerY, 0 + clickcanvas.height));
+  DeltaX2 = playerX-Math.max(BackGroundImageWidth*0.65-(BackGroundImageWidth*0.025), Math.min(playerX, BackGroundImageWidth*0.65-(BackGroundImageWidth*0.025) + BackGroundImageWidth*0.05));
+  DeltaY2 = playerY-Math.max(0, Math.min(playerY, 0 + clickcanvas.height));
+  DeltaX3 = playerX-Math.max(0, Math.min(playerX, 0 + BackGroundImageWidth));
+  DeltaY3 = playerY-Math.max(clickcanvas.height*0.35-(clickcanvas.height*0.04), Math.min(playerY, clickcanvas.height*0.35-(clickcanvas.height*0.04) + clickcanvas.height*0.08));
+  DeltaX4 = playerX-Math.max(0, Math.min(playerX, 0 + BackGroundImageWidth));
+  DeltaY4 = playerY-Math.max(clickcanvas.height*0.65-(clickcanvas.height*0.04), Math.min(playerY, clickcanvas.height*0.65-(clickcanvas.height*0.04) + clickcanvas.height*0.08));
+
+  for(Allbullets2=0;Allbullets2<Allbullets.length;Allbullets2++){
+    for(AllEnemiesDraw2=0;AllEnemiesDraw2<AllEnemies.length;AllEnemiesDraw2++){
+    if (Allbullets2<Allbullets.length){
+      if (Allbullets[Allbullets2].x+clickcanvas.height/70>=AllEnemies[AllEnemiesDraw2].x-clickcanvas.width/70 & Allbullets[Allbullets2].x-clickcanvas.height/70<=AllEnemies[AllEnemiesDraw2].x+clickcanvas.width/70 & Allbullets[Allbullets2].y+clickcanvas.height/50>=AllEnemies[AllEnemiesDraw2].y-clickcanvas.width/70 & Allbullets[Allbullets2].y-clickcanvas.height/50<=AllEnemies[AllEnemiesDraw2].y+clickcanvas.width/70){
+        AllSteam.push(new steam(AllEnemies[AllEnemiesDraw2].x,AllEnemies[AllEnemiesDraw2].y))
+        if (AllEnemies[AllEnemiesDraw2].id3=="SpikeEnemy"){
+          AllEnemies.push(new BlueEnemy(BlueEnemyImage, AllEnemies[AllEnemiesDraw2].x,AllEnemies[AllEnemiesDraw2].y,AllEnemies[AllEnemiesDraw2].id2, "BlueEnemy"))
+        }
+        AllEnemies.splice(AllEnemiesDraw2,1)
+        gold+=1;
+      }else if (Allbullets[Allbullets2].x-clickcanvas.height/70>=BackGroundImageWidth || Allbullets[Allbullets2].x+clickcanvas.height/70<=0 || Allbullets[Allbullets2].y+clickcanvas.height/50<=0 || Allbullets[Allbullets2].y-clickcanvas.height/50>=clickcanvas.height){
+        Allbullets.splice(Allbullets2,1)
+      }
+    }
+  }
+}
+for (shoot=0;shoot<Alltowers.length;shoot+=1){
+    if (Alltowers[shoot].imagearrayplace==0 & Alltowers[shoot].reload==true){
+      Allbullets.push(new bullet("4shooterbullet.png",Alltowers[shoot].x+Alltowers[shoot].width_height/2,Alltowers[shoot].y,Alltowers[shoot].x+clickcanvas.height/70,Alltowers[shoot].y+clickcanvas.height/50+Alltowers[shoot].width_height,Alltowers[shoot].angle,Alltowers[shoot].x,Alltowers[shoot].y,1));
+      Allbullets.push(new bullet("4shooterbullet.png",Alltowers[shoot].x+Alltowers[shoot].width_height/2,Alltowers[shoot].y,Alltowers[shoot].x+clickcanvas.height/70,Alltowers[shoot].y+clickcanvas.height/50+Alltowers[shoot].width_height,Alltowers[shoot].angle+90,Alltowers[shoot].x,Alltowers[shoot].y,1));
+      Allbullets.push(new bullet("4shooterbullet.png",Alltowers[shoot].x+Alltowers[shoot].width_height/2,Alltowers[shoot].y,Alltowers[shoot].x+clickcanvas.height/70,Alltowers[shoot].y+clickcanvas.height/50+Alltowers[shoot].width_height,Alltowers[shoot].angle+180,Alltowers[shoot].x,Alltowers[shoot].y,1));
+      Allbullets.push(new bullet("4shooterbullet.png",Alltowers[shoot].x+Alltowers[shoot].width_height/2,Alltowers[shoot].y,Alltowers[shoot].x+clickcanvas.height/70,Alltowers[shoot].y+clickcanvas.height/50+Alltowers[shoot].width_height,Alltowers[shoot].angle+270,Alltowers[shoot].x,Alltowers[shoot].y,1));
+      Alltowers[shoot].reload=false
+    }
+  }
+  if (UpgradeBar==true){
+    if (UpgradeBarSlide<clickcanvas.width/3.5){
+      UpgradeBarSlide+=clickcanvas.width/56
+    }
+  }
+  if (UpgradeBar==false){
+  if (UpgradeBarSlide>0){
+    UpgradeBarSlide-=clickcanvas.width/56;
+  }
+  }
+  for(AllEnemiesDraw1000000=AllEnemies.length;AllEnemiesDraw1000000>0;AllEnemiesDraw1000000-=1){
+    if (AllEnemies[AllEnemiesDraw1000000-1].draw2==false){
+      AllEnemies.splice(AllEnemiesDraw1000000-1,1);
+    }
+  }
+  for(AllBulletsDraw1000000=Allbullets.length;AllBulletsDraw1000000>0;AllBulletsDraw1000000-=1){
+    if (Allbullets[AllBulletsDraw1000000-1].true==true){
+      Allbullets.splice(AllBulletsDraw1000000-1,1);
+    }
+  }
+  for (AllSteam10=AllSteam.length; AllSteam10>0;AllSteam10-=1){
+    if (AllSteam[AllSteam10-1].steam==true){
+      AllSteam.splice(AllSteam10-1,1);
+    }
+  }
+  if(fourshooterimgonmouse==true & (DeltaX * DeltaX + DeltaY * DeltaY) < (CircleRadius * CircleRadius)){
+        red=true;
+      }else if(fourshooterimgonmouse==true & playerX>=BackGroundImageWidth){
+        red=true;
+      }else if(fourshooterimgonmouse==true & (DeltaX4 * DeltaX4 + DeltaY4 * DeltaY4) < (CircleRadius * CircleRadius)){
+        red=true;
+      }else if(fourshooterimgonmouse==true & (DeltaX3 * DeltaX3 + DeltaY3 * DeltaY3) < (CircleRadius * CircleRadius)){
+        red=true;
+      }else if(fourshooterimgonmouse==true & (DeltaX2 * DeltaX2 + DeltaY2 * DeltaY2) < (CircleRadius * CircleRadius)){
+        red=true;
+      }else{
+        red=false;
+      }
+  window.requestAnimationFrame(Logic);
+}
+function checkimgloads(){
+  if (allimgs>=Allimgs.length){
+  document.getElementById("clicklayer").style.visibility="visible";
+}else{
+  window.requestAnimationFrame(checkimgloads);
+}
+}
+function draw(){
+  clickctx.clearRect(0, 0, clickcanvas.width, clickcanvas.height);
+  enemyctx.clearRect(0, 0, clickcanvas.width, clickcanvas.height);
+  backgroundctx.clearRect(0, 0, clickcanvas.width, clickcanvas.height);
+  steamctx.clearRect(0, 0, clickcanvas.width, clickcanvas.height);
+  bulletctx.clearRect(0, 0, clickcanvas.width, clickcanvas.height);
+  backgroundctx.drawImage(BackGroundImage,0,0,BackGroundImageWidth,BackGroundImageHeight);
+  drawbullets();
+  for(AllEnemiesDraw=AllEnemies.length;AllEnemiesDraw>0;AllEnemiesDraw-=1){
+      AllEnemies[AllEnemiesDraw-1].draw();
+  }
+  for(Alltowers2=0;Alltowers2<Alltowers.length;Alltowers2++){
+    Alltowers[Alltowers2].draw(speedmultiplier);
+  }
+  for(AllSteam2=AllSteam.length;AllSteam2>0;AllSteam2-=1){
+    AllSteam[AllSteam2-1].draw(speedmultiplier);
+  }
+  clickctx.drawImage(BackGroundBarImage,BackGroundImageWidth,0,BackGroundBarImageWidth,BackGroundBarImageHeight);
+  if (speedmultiplier==0 & GameDone==true){
+    clickctx.drawImage(GoButton,BackGroundImageWidth,clickcanvas.height-PlayButtonImageHeight,BackGroundBarImageWidth,PlayButtonImageHeight);
+  }else if (speedmultiplier==1){
+    clickctx.drawImage(PlayButton2,BackGroundImageWidth,clickcanvas.height-PlayButtonImageHeight,BackGroundBarImageWidth,PlayButtonImageHeight);
+  }else if (speedmultiplier==2){
+    clickctx.drawImage(PlayButton3,BackGroundImageWidth,clickcanvas.height-PlayButtonImageHeight,BackGroundBarImageWidth,PlayButtonImageHeight);
+  }else if (speedmultiplier==3){
+    clickctx.drawImage(PlayButton,BackGroundImageWidth,clickcanvas.height-PlayButtonImageHeight,BackGroundBarImageWidth,PlayButtonImageHeight);
+  }
+  drawbuybox(100,"4shooter.png",clickcanvas.width/1.137, clickcanvas.height/40,"100")
+  if (fourshooterimgonmouse==true){
+      if(red==true){
+        clickctx.beginPath();
+        clickctx.fillStyle='rgba( 255,0,0,0.5)'
+        clickctx.arc(playerX, playerY, clickcanvas.height/15, 0, 2 * Math.PI);
+        clickctx.fill();
+      }
+  else{
+      clickctx.beginPath();
+      clickctx.fillStyle='rgba( 0,0,0,0.5)'
+      clickctx.arc(playerX, playerY, clickcanvas.height/15, 0, 2 * Math.PI);
+      clickctx.fill();
+    }
+    clickctx.drawImage(fourshooterimg,playerX-clickcanvas.height/20,playerY-clickcanvas.height/20,clickcanvas.height/10,clickcanvas.height/10);
+  
+  }
+  if (UpgradeBarSlide>=0){
+    clickctx.drawImage(UpgradeBarimg1, -clickcanvas.width/3.5+UpgradeBarSlide,0,clickcanvas.width/3.5, clickcanvas.height);
+  }
+  clickctx.drawImage(HealthImage, clickcanvas.width/400+UpgradeBarSlide, clickcanvas.height/50+CoinImageWidthHeight, HealthImageWidth, HealthImageHeight);
+  clickctx.font = getFont(60,1600);
+  clickctx.strokeStyle = 'black';
+  clickctx.lineWidth = clickcanvas.width/180;
+  clickctx.strokeText(health, clickcanvas.width-clickcanvas.width/1.05+UpgradeBarSlide, clickcanvas.height/12+CoinImageWidthHeight);
+  clickctx.fillStyle = "white";
+  clickctx.fillText(health, clickcanvas.width-clickcanvas.width/1.05+UpgradeBarSlide, clickcanvas.height/12+CoinImageWidthHeight);
+  clickctx.drawImage(CoinImage, clickcanvas.width/400+UpgradeBarSlide, clickcanvas.height/110,  CoinImageWidthHeight, CoinImageWidthHeight);
+  clickctx.font = getFont(60,1600); 
+  clickctx.fillStyle = "white";
+  clickctx.strokeStyle = 'black';
+  clickctx.lineWidth = clickcanvas.width/180;
+  clickctx.strokeText("$"+gold, clickcanvas.width-clickcanvas.width/1.05+UpgradeBarSlide, clickcanvas.height/13);
+  clickctx.fillText("$"+gold, clickcanvas.width-clickcanvas.width/1.05+UpgradeBarSlide, clickcanvas.height/13);
+  clickctx.font = getFont(60,1600); 
+  clickctx.fillStyle = "white";
+  clickctx.strokeStyle = 'black';
+  clickctx.lineWidth = clickcanvas.width/180;
+  clickctx.strokeText("Round:", BackGroundImageWidth-clickcanvas.width/7, clickcanvas.height/13);
+  clickctx.fillText("Round:", BackGroundImageWidth-clickcanvas.width/7, clickcanvas.height/13);
+  clickctx.strokeText(showround, BackGroundImageWidth-clickcanvas.width/7, clickcanvas.height/6.5);
+  clickctx.fillText(showround, BackGroundImageWidth-clickcanvas.width/7, clickcanvas.height/6.5);
+  window.requestAnimationFrame(draw);
+}
+  window.requestAnimationFrame(checkimgloads);
+  window.requestAnimationFrame(Logic);
+  window.requestAnimationFrame(MakeMediumPacedEnemies);
+  window.requestAnimationFrame(MakeSlowPacedEnemies);
+  window.requestAnimationFrame(MakeFastPacedEnemies);
+  window.requestAnimationFrame(draw);
+</script>
+</body>
+</html>
