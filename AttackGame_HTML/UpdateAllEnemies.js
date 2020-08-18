@@ -7,7 +7,7 @@ function UpdateAllEnemies(){
             }else{
             health-=AllEnemies[AllEnemiesUpdate].damage;
             }
-            AllEnemies.splice(AllEnemies[AllEnemiesUpdate],1);
+            AllEnemies.splice(AllEnemiesUpdate,1);
         }
     }
 }

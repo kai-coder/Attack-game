@@ -2,8 +2,23 @@
 <html>
 <head>
 <script src="drawbullets.js" type="text/javascript"></script> 
-<script src="SpikeyEnemy.js" type="text/javascript"></script> 
+<script src="updatebullets.js" type="text/javascript"></script>
+<script src="makebullets.js" type="text/javascript"></script>
+<script src="drawsteam.js" type="text/javascript"></script> 
+<script src="updatesteam.js" type="text/javascript"></script>
 <script src="UpdateAllEnemies.js" type="text/javascript"></script> 
+<script src="updatespawn.js" type="text/javascript"></script> 
+<script src="drawenemies.js" type="text/javascript"></script> 
+<script src="Checkbullethit.js" type="text/javascript"></script> 
+<script src="SpikeyEnemy.js" type="text/javascript"></script> 
+<script src="BlueEnemy.js" type="text/javascript"></script> 
+<script src="GreenEnemy.js" type="text/javascript"></script> 
+<script src="YellowEnemy.js" type="text/javascript"></script> 
+<script src="RedEnemy.js" type="text/javascript"></script> 
+<script src="EnemyGohst.js" type="text/javascript"></script> 
+<script src="bullet.js" type="text/javascript"></script>
+<script src="Steam.js" type="text/javascript"></script> 
+<script src="upgradebar.js" type="text/javascript"></script> 
 <title>Fire vs Ice</title>
 <link rel="shortcut icon" href="GameTitle.ico" type="image/x-icon">
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -70,7 +85,7 @@ red=false
 //Enemy Arrays
 AllEnemies=[];
 speedmultiplier=0;
-FastPacedRounds=[[1,1,10000,"SpikeyEnemy"]];
+FastPacedRounds=[[1,1,3,"SpikeyEnemy"]];
 MediumPacedRounds=[];
 SlowPacedRounds=[];
 Alltowers=[];
@@ -86,53 +101,6 @@ newtouches=0;
 UpgradeBar=false;
 UpgradeBarSlide=0;
 speed0=false
-
-//classes
-class steam{
-  constructor(starterx,startery) {
-    this.image=new Image();
-    this.image.src="Steam.png";
-    this._x=starterx;
-    this._y=startery;
-    this.start=0;
-    this.angle=0;
-    this.width_height=clickcanvas.height/8;
-    this.imageloaded=false;
-    this.nosteam=false
-  }
-  draw(speedmultiplier2){
-  this.start+=0.1*speedmultiplier2;
-  this.image.onload=function(){
-      this.imageloaded=true;
-    }
-  if (this.start<=0.3){
-    this.width_height2=this.width_height*0.3;
-  }
-  if (this.start>0.3 & this.start<=0.6){
-    this.width_height2=this.width_height*0.6;
-  }
-  if (this.start>0.6 & this.start<=0.9){
-    this.width_height2=this.width_height*0.9;
-  }
-  if (this.start<=1.2){
-    if (this.imageloaded=true){
-    steamctx.save();
-    steamctx.translate(this._x, this._y);
-    steamctx.rotate(this.angle * Math.PI/180);
-    steamctx.drawImage(this.image, -(this.width_height2/2),-(this.width_height2/2),this.width_height2, this.width_height2);
-    steamctx.restore();
-    }
-  }else{
-    this.nosteam=true;
-  }
-  }
-  get steam() {
-    return this.nosteam;
-  }
-  set steam(a) {
-    this.nosteam = a;
-  }
-}
 function drawbuybox(price,image,x,y,price2){
   this.image=new Image();
   this.image.src=image;
@@ -168,88 +136,6 @@ readyfirstrow=[1];
 readysecondrow=[1];
 readythirdrow=[1];
 readyfourthrow=[1];
-class SpikeyEnemyGohst{
-  constructor(image,starterx,startery,id,id2) {
-    this.id=id;
-    this.image=image;
-    this.damage=5;
-    this.speed=clickcanvas.width/1000;
-    this._x=starterx;
-    this._y=startery;
-    this.star=starterx;
-    this.start=startery;
-    this.width_height=clickcanvas.width/35;
-    this._draw=true;
-    this.id2=id2
-  }
-  draw(speedmultiplier2){
-    if (this.id==0){
-      this.speedmultiplier2=speedmultiplier2;
-      this._x-=this.speed*this.speedmultiplier2;
-    }
-    if (this.id==1){
-      this.speedmultiplier2=speedmultiplier2;
-      this._x+=this.speed*this.speedmultiplier2;
-    }
-    if (this.id==2){
-      this.speedmultiplier2=speedmultiplier2;
-      this._y+=this.speed*this.speedmultiplier2;
-    }
-    if (this.id==3){
-      this.speedmultiplier2=speedmultiplier2;
-      this._y-=this.speed*this.speedmultiplier2;
-    }
-    if (this._x>=this.width_height/4 & this.id==1){
-      readysecondrow.push("1");
-      this._x=this.star;
-    }else {
-      this._draw=true
-    }
-    if (this._x<=clickcanvas.width/8*7-this.width_height/4 & this.id==0){
-      readyfirstrow.push("1");
-      this._x=this.star;
-    }else {
-      this._draw=true
-    }
-    if (this._y>=this.width_height/4 & this.id==2){
-      readythirdrow.push("1");
-      this._y=this.start;
-    }else {
-      this._draw=true
-    }
-    
-    if (this._y<=clickcanvas.height-this.width_height/4 & this.id==3){
-      readyfourthrow.push("1");
-      this._y=this.start;
-    }else {
-      this._draw=true
-    }
-  }
-  get x() {
-    return this._x;
-  }
-  set x(a) {
-    this._x = a;
-  }
-  get y() {
-    return this._y;
-  }
-  set y(d) {
-    this._y = d;
-  }
-  get draw2() {
-    return this._draw;
-  }
-  set draw2(c) {
-    this._draw = c;
-  }
-  get id3() {
-    return this.id2;
-  }
-  set id3(c) {
-    this.id2 = c;
-  }
-}
 i=0;
 class fourshooter{
   constructor(image,x,y) {
@@ -327,88 +213,6 @@ class fourshooter{
   
 }
 EnemyGetReady=[]
-class bullet{
-  constructor(image,x,y,loxationtox,locationtoy,angle,cx,cy,id,penetration,penetrated) {
-    this.image=new Image();
-    this.image.src=image;
-    this._x=x;
-    this._y=y;
-    this._starterx=x;
-    this._startery=y;
-    this.width=clickcanvas.height/35;
-    this.height=clickcanvas.height/25;
-    this.angle=angle;
-    this.radians = (Math.PI / 180) * angle;
-    this.cos = Math.cos(this.radians),
-    this.sin = Math.sin(this.radians),
-    this._nx = (this.cos * (this._x - cx)) - (this.sin * (this._y - cy)) + cx;
-    this._ny = (this.cos * (this._y - cy)) + (this.sin * (this._x - cx)) + cy;
-    this.starternx=(this.cos * (this._x - cx)) - (this.sin * (this._y - cy)) + cx;
-    this.starterny=(this.cos * (this._y - cy)) + (this.sin * (this._x - cx)) + cy;
-    this.imageloaded=false;
-    this.mouseX=loxationtox;
-    this.mouseY=locationtoy;
-    this.bulletSpeed=clickcanvas.height/450;
-    this.cx=cx;
-    this.cy=cy;
-    this.penetration=2;
-    this.penetrated=0;
-    this.distancefromplacex = this._nx-(this._nx)+(this._nx-cx);
-    this.distancefromplacey = this._ny-(this._ny)+(this._ny-cy);
-    this.magnitude = Math.sqrt(this.distancefromplacex * this.distancefromplacex + this.distancefromplacey * this.distancefromplacey);
-    this.velocityScale = this.bulletSpeed / this.magnitude;
-    this.xvelocity = this.distancefromplacex * this.velocityScale;
-    this.yvelocity = this.distancefromplacey * this.velocityScale;
-    this._true=false
-  }
-  draw(speedmultiplier2){
-    if (this.penetrated==this.penetration){
-      this._true=true;
-    }
-    this.a = this._nx - this.cx;
-    this.b = this._ny - this.cy;
-    this.c = Math.sqrt(this.b*this.b + this.a*this.a);
-    if (this.c>=clickcanvas.height){
-      this._true=true;
-    }
-    this._nx+=this.xvelocity*speedmultiplier2;
-    this._ny+=this.yvelocity*speedmultiplier2;
-    bulletctx.save();
-    bulletctx.translate(this._nx, this._ny);
-    bulletctx.rotate((this.angle+270) * Math.PI/180);
-    this.image.onload=function(){
-      this.imageloaded=true;
-    }
-    if (this.imageloaded=true){
-      bulletctx.drawImage(this.image, -(this.width/2),-(this.height/2),this.width, this.height);
-    }
-    bulletctx.restore();
-  }
-  get true() {
-    return this._true;
-  }
-  set true(a) {
-    this._true = a;
-  }
-  get x() {
-    return this._nx;
-  }
-  set x(a) {
-    this._nx = a;
-  }
-  get y() {
-    return this._ny;
-  }
-  set y(d) {
-    this._ny = d;
-  }
-  get punch() {
-    return this.penetrated;
-  }
-  set punch(d) {
-    this.penetrated = d;
-  }
-}
 //images
 var BackGroundImage=new Image();
 BackGroundImage.src="BackgroundPiece.png";
@@ -638,6 +442,13 @@ function MakeSlowPacedEnemies(){
 CircleRadius=clickcanvas.height/20;
 DeltaX=0
 DeltaY=0
+function Logic(){
+  UpdateAllEnemies();
+  updatebullets();
+  checkbullethit();
+  updatesteam();
+  makebullets();
+  moveupgradebar();
   DeltaX = playerX-Math.max(BackGroundImageWidth*0.35-(BackGroundImageWidth*0.025), Math.min(playerX, BackGroundImageWidth*0.35-(BackGroundImageWidth*0.025) + BackGroundImageWidth*0.05));
   DeltaY = playerY-Math.max(0, Math.min(playerY, 0 + clickcanvas.height));
   DeltaX2 = playerX-Math.max(BackGroundImageWidth*0.65-(BackGroundImageWidth*0.025), Math.min(playerX, BackGroundImageWidth*0.65-(BackGroundImageWidth*0.025) + BackGroundImageWidth*0.05));
@@ -646,57 +457,7 @@ DeltaY=0
   DeltaY3 = playerY-Math.max(clickcanvas.height*0.35-(clickcanvas.height*0.04), Math.min(playerY, clickcanvas.height*0.35-(clickcanvas.height*0.04) + clickcanvas.height*0.08));
   DeltaX4 = playerX-Math.max(0, Math.min(playerX, 0 + BackGroundImageWidth));
   DeltaY4 = playerY-Math.max(clickcanvas.height*0.65-(clickcanvas.height*0.04), Math.min(playerY, clickcanvas.height*0.65-(clickcanvas.height*0.04) + clickcanvas.height*0.08));
-
-  for(Allbullets2=0;Allbullets2<Allbullets.length;Allbullets2++){
-    for(AllEnemiesDraw2=0;AllEnemiesDraw2<AllEnemies.length;AllEnemiesDraw2++){
-    if (Allbullets2<Allbullets.length){
-      if (Allbullets[Allbullets2].x+clickcanvas.height/70>=AllEnemies[AllEnemiesDraw2].x-clickcanvas.width/70 & Allbullets[Allbullets2].x-clickcanvas.height/70<=AllEnemies[AllEnemiesDraw2].x+clickcanvas.width/70 & Allbullets[Allbullets2].y+clickcanvas.height/50>=AllEnemies[AllEnemiesDraw2].y-clickcanvas.width/70 & Allbullets[Allbullets2].y-clickcanvas.height/50<=AllEnemies[AllEnemiesDraw2].y+clickcanvas.width/70){
-        AllSteam.push(new steam(AllEnemies[AllEnemiesDraw2].x,AllEnemies[AllEnemiesDraw2].y))
-        if (AllEnemies[AllEnemiesDraw2].id3=="SpikeEnemy"){
-          AllEnemies.push(new BlueEnemy(BlueEnemyImage, AllEnemies[AllEnemiesDraw2].x,AllEnemies[AllEnemiesDraw2].y,AllEnemies[AllEnemiesDraw2].id2, "BlueEnemy"))
-        }
-        AllEnemies.splice(AllEnemiesDraw2,1)
-        gold+=1;
-      }else if (Allbullets[Allbullets2].x-clickcanvas.height/70>=BackGroundImageWidth || Allbullets[Allbullets2].x+clickcanvas.height/70<=0 || Allbullets[Allbullets2].y+clickcanvas.height/50<=0 || Allbullets[Allbullets2].y-clickcanvas.height/50>=clickcanvas.height){
-        Allbullets.splice(Allbullets2,1)
-      }
-    }
-  }
-}
-for (shoot=0;shoot<Alltowers.length;shoot+=1){
-    if (Alltowers[shoot].imagearrayplace==0 & Alltowers[shoot].reload==true){
-      Allbullets.push(new bullet("4shooterbullet.png",Alltowers[shoot].x+Alltowers[shoot].width_height/2,Alltowers[shoot].y,Alltowers[shoot].x+clickcanvas.height/70,Alltowers[shoot].y+clickcanvas.height/50+Alltowers[shoot].width_height,Alltowers[shoot].angle,Alltowers[shoot].x,Alltowers[shoot].y,1));
-      Allbullets.push(new bullet("4shooterbullet.png",Alltowers[shoot].x+Alltowers[shoot].width_height/2,Alltowers[shoot].y,Alltowers[shoot].x+clickcanvas.height/70,Alltowers[shoot].y+clickcanvas.height/50+Alltowers[shoot].width_height,Alltowers[shoot].angle+90,Alltowers[shoot].x,Alltowers[shoot].y,1));
-      Allbullets.push(new bullet("4shooterbullet.png",Alltowers[shoot].x+Alltowers[shoot].width_height/2,Alltowers[shoot].y,Alltowers[shoot].x+clickcanvas.height/70,Alltowers[shoot].y+clickcanvas.height/50+Alltowers[shoot].width_height,Alltowers[shoot].angle+180,Alltowers[shoot].x,Alltowers[shoot].y,1));
-      Allbullets.push(new bullet("4shooterbullet.png",Alltowers[shoot].x+Alltowers[shoot].width_height/2,Alltowers[shoot].y,Alltowers[shoot].x+clickcanvas.height/70,Alltowers[shoot].y+clickcanvas.height/50+Alltowers[shoot].width_height,Alltowers[shoot].angle+270,Alltowers[shoot].x,Alltowers[shoot].y,1));
-      Alltowers[shoot].reload=false
-    }
-  }
-  if (UpgradeBar==true){
-    if (UpgradeBarSlide<clickcanvas.width/3.5){
-      UpgradeBarSlide+=clickcanvas.width/56
-    }
-  }
-  if (UpgradeBar==false){
-  if (UpgradeBarSlide>0){
-    UpgradeBarSlide-=clickcanvas.width/56;
-  }
-  }
-  for(AllEnemiesDraw1000000=AllEnemies.length;AllEnemiesDraw1000000>0;AllEnemiesDraw1000000-=1){
-    if (AllEnemies[AllEnemiesDraw1000000-1].draw2==false){
-      AllEnemies.splice(AllEnemiesDraw1000000-1,1);
-    }
-  }
-  for(AllBulletsDraw1000000=Allbullets.length;AllBulletsDraw1000000>0;AllBulletsDraw1000000-=1){
-    if (Allbullets[AllBulletsDraw1000000-1].true==true){
-      Allbullets.splice(AllBulletsDraw1000000-1,1);
-    }
-  }
-  for (AllSteam10=AllSteam.length; AllSteam10>0;AllSteam10-=1){
-    if (AllSteam[AllSteam10-1].steam==true){
-      AllSteam.splice(AllSteam10-1,1);
-    }
-  }
+  updatespawn()
   if(fourshooterimgonmouse==true & (DeltaX * DeltaX + DeltaY * DeltaY) < (CircleRadius * CircleRadius)){
         red=true;
       }else if(fourshooterimgonmouse==true & playerX>=BackGroundImageWidth){
@@ -727,15 +488,11 @@ function draw(){
   bulletctx.clearRect(0, 0, clickcanvas.width, clickcanvas.height);
   backgroundctx.drawImage(BackGroundImage,0,0,BackGroundImageWidth,BackGroundImageHeight);
   drawbullets();
-  for(AllEnemiesDraw=AllEnemies.length;AllEnemiesDraw>0;AllEnemiesDraw-=1){
-      AllEnemies[AllEnemiesDraw-1].draw();
-  }
+  drawenemies()
   for(Alltowers2=0;Alltowers2<Alltowers.length;Alltowers2++){
     Alltowers[Alltowers2].draw(speedmultiplier);
   }
-  for(AllSteam2=AllSteam.length;AllSteam2>0;AllSteam2-=1){
-    AllSteam[AllSteam2-1].draw(speedmultiplier);
-  }
+  drawsteam();
   clickctx.drawImage(BackGroundBarImage,BackGroundImageWidth,0,BackGroundBarImageWidth,BackGroundBarImageHeight);
   if (speedmultiplier==0 & GameDone==true){
     clickctx.drawImage(GoButton,BackGroundImageWidth,clickcanvas.height-PlayButtonImageHeight,BackGroundBarImageWidth,PlayButtonImageHeight);
