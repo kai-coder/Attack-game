@@ -76,4 +76,10 @@ class SpikeyEnemy{
   set damage(damage) {
     this._damage = damage;
   }
+  get width_height(){
+    return this._width_height;
+  }
+  set width_height(widthheight){
+    this._width_height=widthheight;
+  }
 }
