@@ -1,0 +1,27 @@
+.WaterKingdomLevelLetterFormat {
+   font-size:50px;
+   color:rgb(0, 0, 255);
+   user-select: none;       
+}
+.WaterKingdomButton {
+   width:220px;
+   font-size:50px;
+   padding:25px;
+   border-radius: 10px;
+   user-select: none;   
+}
+.WaterKingdomButton:hover{
+   cursor: pointer;
+   user-select: none;
+}
+.WaterKingdomInputBox {
+   width:500px;
+   padding:20px;
+   font-size:75px;
+   color:rgb(0, 0, 255);    
+}
+.WaterKingdomEnterText {
+   font-size:50px;
+   color:rgb(0, 0, 255);
+   user-select: none;       
+}
