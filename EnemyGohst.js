@@ -3,16 +3,18 @@ class SpikeyEnemyGohst{
       this.id=id;
       this.image=image;
       this.damage=5;
-      this.speed=clickcanvas.width/1000;
+      this.speed=width/1000;
       this._x=starterx;
       this._y=startery;
       this.star=starterx;
       this.start=startery;
-      this.width_height=clickcanvas.width/35;
+      this.width_height=width/35;
       this._draw=true;
       this.id2=id2
     }
     update(speedmultiplier2){
+      this.speed=width/1000;
+      this.width_height=width/35;
       if (this.id==0){
         this.speedmultiplier2=speedmultiplier2;
         this._x-=this.speed*this.speedmultiplier2;
@@ -35,7 +37,7 @@ class SpikeyEnemyGohst{
       }else {
         this._draw=true
       }
-      if (this._x<=clickcanvas.width/8*7-this.width_height/4 & this.id==0){
+      if (this._x<=width/8*7-this.width_height/4 & this.id==0){
         readyfirstrow.push("1");
         this._x=this.star;
       }else {
@@ -48,7 +50,7 @@ class SpikeyEnemyGohst{
         this._draw=true
       }
       
-      if (this._y<=clickcanvas.height-this.width_height/4 & this.id==3){
+      if (this._y<=height-this.width_height/4 & this.id==3){
         readyfourthrow.push("1");
         this._y=this.start;
       }else {

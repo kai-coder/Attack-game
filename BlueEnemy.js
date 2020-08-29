@@ -3,12 +3,12 @@ class BlueEnemy{
       this.image=image;
       this._direction=direction;
       this._type=typeofEnemy;
-      this._width_height=window.innerWidth/33.3333;
+      this._width_height=width/33.3333;
       this._x=starterx;
       this._y=startery;
       this._draw=true;
       this._damage=4;
-      this.speed=window.innerWidth/780.487;
+      this.speed=width/780.487;
     }
     draw(){
       enemyctx.drawImage(this.image, this._x-(this._width_height/2),this._y-(this._width_height/2),this._width_height, this._width_height);
@@ -30,10 +30,10 @@ class BlueEnemy{
       if (this._x<=-this._width_height/2 & this._direction==0){
         this._draw=false
       }
-      if (this._x>=window.innerWidth/8*7+this._width_height/2 & this._direction==1){
+      if (this._x>=width/8*7+this._width_height/2 & this._direction==1){
         this._draw=false
       }
-      if (this._y>=window.innerHeight+this._width_height/2 & this._direction==2){
+      if (this._y>=height+this._width_height/2 & this._direction==2){
         this._draw=false
       }
       if (this._y<=-this._width_height/2 & this._direction==3){
